@@ -34,8 +34,9 @@ func GetMacOptions() *mac.Options {
 // GetWindowsOptions повертає налаштування для Windows
 func GetWindowsOptions() *windows.Options {
 	return &windows.Options{
-		WebviewIsTransparent: true,
-		WindowIsTranslucent:  true,
+		WebviewIsTransparent:              true,
+		WindowIsTranslucent:               true,
+		DisableFramelessWindowDecorations: true,
 		// BackdropType можна увімкнути для ефектів Windows:
 		// BackdropType: windows.Acrylic, // Acrylic ефект
 		// BackdropType: windows.Mica,    // Mica ефект (Windows 11)

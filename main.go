@@ -23,10 +23,15 @@ func main() {
 
 	// Запускаємо застосунок
 	err := wails.Run(&options.App{
-		Title:            windowConfig.Title,
-		Width:            windowConfig.Width,
-		Height:           windowConfig.Height,
-		BackgroundColour: config.GetBackgroundColor(),
+		Title:                    windowConfig.Title,
+		Width:                    windowConfig.Width,
+		Height:                   windowConfig.Height,
+		Frameless:                true, // Прибираємо рамку вікна
+		BackgroundColour:         config.GetBackgroundColor(),
+		WindowStartState:         options.Normal,
+		EnableDefaultContextMenu: false,
+		Windows:                  config.GetWindowsOptions(),
+		Mac:                      config.GetMacOptions(),
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
@@ -36,8 +41,6 @@ func main() {
 		Bind: []interface{}{
 			application,
 		},
-		Mac:     config.GetMacOptions(),
-		Windows: config.GetWindowsOptions(),
 	})
 
 	if err != nil {
