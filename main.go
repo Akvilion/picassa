@@ -26,7 +26,7 @@ func main() {
 		Title:                    windowConfig.Title,
 		Width:                    windowConfig.Width,
 		Height:                   windowConfig.Height,
-		Frameless:                true, // Прибираємо рамку вікна
+		Frameless:                true, // Вікно без верхньої панелі
 		BackgroundColour:         config.GetBackgroundColor(),
 		WindowStartState:         options.Normal,
 		EnableDefaultContextMenu: false,
