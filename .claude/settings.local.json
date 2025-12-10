@@ -4,7 +4,9 @@
       "Bash(dir:*)",
       "Bash(wmic os get:*)",
       "Bash(systeminfo:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(tree:*)",
+      "Bash(go build:*)"
     ]
   }
 }

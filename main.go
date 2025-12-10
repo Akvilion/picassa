@@ -3,41 +3,44 @@ package main
 import (
 	"embed"
 
+	"pica3/internal/app"
+	"pica3/pkg/config"
+
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/mac"
-	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
+	// Створюємо екземпляр застосунку
+	application := app.NewApp()
+
+	// Отримуємо конфігурацію вікна
+	windowConfig := config.DefaultWindowConfig()
+
+	// Запускаємо застосунок
 	err := wails.Run(&options.App{
-		Title:  "Pica3",
-		Width:  800,
-		Height: 600,
-		// Повністю прозорий фон (A: 0 = прозорий, A: 255 = непрозорий)
-		BackgroundColour: &options.RGBA{R: 0, G: 0, B: 0, A: 0},
+		Title:            windowConfig.Title,
+		Width:            windowConfig.Width,
+		Height:           windowConfig.Height,
+		BackgroundColour: config.GetBackgroundColor(),
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		// Специфічні налаштування для OS
-		Mac: &mac.Options{
-			TitleBar:             mac.TitleBarHiddenInset(),
-			WebviewIsTransparent: true,
-			WindowIsTranslucent:  true,
+		OnStartup:  application.Startup,
+		OnShutdown: application.Shutdown,
+		OnDomReady: application.DomReady,
+		Bind: []interface{}{
+			application,
 		},
-		Windows: &windows.Options{
-			WebviewIsTransparent: true,
-			WindowIsTranslucent:  true,
-			// BackdropType можна закоментувати для повної прозорості
-			// BackdropType: windows.Acrylic,
-		},
+		Mac:     config.GetMacOptions(),
+		Windows: config.GetWindowsOptions(),
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		println("Помилка:", err.Error())
 	}
 }
