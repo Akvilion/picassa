@@ -9,7 +9,7 @@ html {
 
 body {
     min-height: 100%;
-    background: transparent !important;
+    background: rgba(20, 20, 30, 0.95) !important;
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -22,12 +22,15 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 52px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding: 0 10px;
     z-index: 1000;
+    background: rgba(30, 30, 40, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     --wails-draggable: drag;
     -webkit-app-region: drag;
 }
@@ -44,8 +47,8 @@ body {
     width: 32px;
     height: 32px;
     border: none;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     cursor: pointer;
@@ -53,14 +56,12 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #ccc;
 }
 
 .control-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .control-btn:active {
@@ -76,35 +77,174 @@ body {
     pointer-events: none;
 }
 
-.glass-card {
-    width: 400px;
-    min-height: 250px;
-    margin: 50px auto;
-    padding: 30px;
-
-    /* Ефект скла - більш помітний */
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    box-shadow:
-        0 8px 32px 0 rgba(0, 0, 0, 0.37),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-
-    color: #333;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+/* Контейнер для зображення */
+.image-container {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: rgba(20, 20, 30, 0.95);
 }
 
-.glass-card h2 {
-    margin-top: 0;
-    color: #222;
-    font-size: 32px;
-    font-weight: 600;
+/* Порожній стан */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 40px;
 }
 
-.glass-card p {
-    color: #444;
-    font-size: 16px;
-    line-height: 1.6;
+.empty-state svg {
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Головне зображення */
+.main-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    cursor: grab;
+}
+
+.main-image:active {
+    cursor: grabbing;
+}
+
+/* Нижня панель інструментів */
+.toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(30, 30, 40, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-section.left {
+    flex: 1;
+}
+
+.toolbar-section.center {
+    flex: 2;
+    justify-content: center;
+}
+
+.toolbar-section.right {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* Кнопки інструментів */
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: #ccc;
+}
+
+.tool-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tool-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.tool-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.tool-btn.primary {
+    background: rgba(0, 120, 215, 0.8);
+    color: white;
+}
+
+.tool-btn.primary:hover:not(:disabled) {
+    background: rgba(0, 120, 215, 1);
+}
+
+.tool-btn svg {
+    pointer-events: none;
+}
+
+/* Рівень масштабу */
+.zoom-level {
+    min-width: 50px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Інформація про зображення */
+.image-info {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+/* Мініатюра в правому нижньому куті */
+.thumbnail {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 120px;
+    height: 90px;
+    background: rgba(30, 30, 40, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 5px;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pica3</title>
+    <title>Pica3 - Переглядач зображень</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <!-- Верхня панель з кнопками керування -->
     <div class="titlebar">
       <div class="window-controls">
         <button id="minimize-btn" class="control-btn" title="Згорнути">
@@ -28,20 +29,106 @@
         </button>
       </div>
     </div>
-    <div class="glass-card">
-      <h2>Pica3</h2>
-      <p>Прозоре вікно з ефектом скла!</p>
-      <p>Ви повинні бачити ваші обої крізь це вікно.</p>
+
+    <!-- Головний контейнер для зображення -->
+    <div class="image-container" id="imageContainer">
+      <div class="empty-state" id="emptyState">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <p>Натисніть кнопку нижче або перетягніть зображення сюди</p>
+      </div>
+      <img id="currentImage" class="main-image" style="display: none;" alt="Поточне зображення">
     </div>
+
+    <!-- Нижня панель інструментів -->
+    <div class="toolbar">
+      <div class="toolbar-section left">
+        <button id="prevBtn" class="tool-btn" title="Попереднє зображення" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <button id="nextBtn" class="tool-btn" title="Наступне зображення" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="toolbar-section center">
+        <button id="rotateBtn" class="tool-btn" title="Повернути" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+        </button>
+        <button id="openBtn" class="tool-btn primary" title="Відкрити зображення">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3h18v18H3z"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </button>
+        <button id="zoomOutBtn" class="tool-btn" title="Зменшити" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+        </button>
+        <span id="zoomLevel" class="zoom-level">100%</span>
+        <button id="zoomInBtn" class="tool-btn" title="Збільшити" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <line x1="11" y1="8" x2="11" y2="14"/>
+            <line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+        </button>
+        <button id="fitBtn" class="tool-btn" title="Вмістити в екран" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="toolbar-section right">
+        <span id="imageInfo" class="image-info">1/1</span>
+        <button id="settingsBtn" class="tool-btn" title="Налаштування">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"/>
+          </svg>
+        </button>
+        <button id="helpBtn" class="tool-btn" title="Довідка">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мініатюра зображення в правому нижньому куті -->
+    <div class="thumbnail" id="thumbnail" style="display: none;">
+      <img id="thumbnailImg" alt="Мініатюра">
+    </div>
+
     <script src="wailsjs/runtime/runtime.js"></script>
     <script src="wailsjs/go/app/App.js"></script>
     <script>
-      // Згорнути вікно
+      let currentZoom = 1;
+      let currentRotation = 0;
+      let hasImage = false;
+
+      // Кнопки керування вікном
       document.getElementById('minimize-btn').addEventListener('click', () => {
         window.runtime.WindowMinimise();
       });
 
-      // Повний екран / вихід з повного екрану
       let isMaximized = false;
       document.getElementById('maximize-btn').addEventListener('click', () => {
         if (isMaximized) {
@@ -52,9 +139,154 @@
         isMaximized = !isMaximized;
       });
 
-      // Закрити програму
       document.getElementById('close-btn').addEventListener('click', () => {
         window.runtime.Quit();
+      });
+
+      // Функція для оновлення стану кнопок
+      function updateButtonStates(enabled) {
+        const buttons = ['prevBtn', 'nextBtn', 'rotateBtn', 'zoomInBtn', 'zoomOutBtn', 'fitBtn'];
+        buttons.forEach(id => {
+          document.getElementById(id).disabled = !enabled;
+        });
+        hasImage = enabled;
+      }
+
+      // Відкрити зображення
+      document.getElementById('openBtn').addEventListener('click', async () => {
+        try {
+          const imageData = await window.go.app.App.OpenImage();
+          displayImage(imageData);
+          updateImageInfo();
+        } catch (error) {
+          console.error('Помилка відкриття зображення:', error);
+        }
+      });
+
+      // Функція відображення зображення
+      function displayImage(imageData) {
+        const img = document.getElementById('currentImage');
+        const emptyState = document.getElementById('emptyState');
+        const thumbnail = document.getElementById('thumbnail');
+        const thumbnailImg = document.getElementById('thumbnailImg');
+
+        img.src = imageData;
+        img.style.display = 'block';
+        emptyState.style.display = 'none';
+
+        thumbnailImg.src = imageData;
+        thumbnail.style.display = 'block';
+
+        currentZoom = 1;
+        currentRotation = 0;
+        updateImageTransform();
+        updateButtonStates(true);
+      }
+
+      // Попереднє зображення
+      document.getElementById('prevBtn').addEventListener('click', async () => {
+        try {
+          const imageData = await window.go.app.App.PreviousImage();
+          displayImage(imageData);
+          updateImageInfo();
+        } catch (error) {
+          console.error('Помилка:', error);
+        }
+      });
+
+      // Наступне зображення
+      document.getElementById('nextBtn').addEventListener('click', async () => {
+        try {
+          const imageData = await window.go.app.App.NextImage();
+          displayImage(imageData);
+          updateImageInfo();
+        } catch (error) {
+          console.error('Помилка:', error);
+        }
+      });
+
+      // Повернути зображення
+      document.getElementById('rotateBtn').addEventListener('click', () => {
+        currentRotation = (currentRotation + 90) % 360;
+        updateImageTransform();
+      });
+
+      // Збільшити
+      document.getElementById('zoomInBtn').addEventListener('click', () => {
+        currentZoom = Math.min(currentZoom + 0.25, 5);
+        updateImageTransform();
+      });
+
+      // Зменшити
+      document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        currentZoom = Math.max(currentZoom - 0.25, 0.1);
+        updateImageTransform();
+      });
+
+      // Вмістити в екран
+      document.getElementById('fitBtn').addEventListener('click', () => {
+        currentZoom = 1;
+        currentRotation = 0;
+        updateImageTransform();
+      });
+
+      // Оновити трансформацію зображення
+      function updateImageTransform() {
+        const img = document.getElementById('currentImage');
+        img.style.transform = `scale(${currentZoom}) rotate(${currentRotation}deg)`;
+        document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 100) + '%';
+      }
+
+      // Оновити інформацію про зображення
+      async function updateImageInfo() {
+        try {
+          const info = await window.go.app.App.GetImageInfo();
+          document.getElementById('imageInfo').textContent = `${info.current}/${info.total}`;
+        } catch (error) {
+          console.error('Помилка отримання інформації:', error);
+        }
+      }
+
+      // Клавіатурні скорочення
+      document.addEventListener('keydown', (e) => {
+        if (!hasImage) return;
+
+        switch(e.key) {
+          case 'ArrowLeft':
+            document.getElementById('prevBtn').click();
+            break;
+          case 'ArrowRight':
+            document.getElementById('nextBtn').click();
+            break;
+          case '+':
+          case '=':
+            document.getElementById('zoomInBtn').click();
+            break;
+          case '-':
+            document.getElementById('zoomOutBtn').click();
+            break;
+          case 'r':
+          case 'R':
+            document.getElementById('rotateBtn').click();
+            break;
+          case 'f':
+          case 'F':
+            document.getElementById('fitBtn').click();
+            break;
+        }
+      });
+
+      // Коліщатко миші для масштабування
+      document.getElementById('imageContainer').addEventListener('wheel', (e) => {
+        if (!hasImage) return;
+        e.preventDefault();
+
+        if (e.deltaY < 0) {
+          currentZoom = Math.min(currentZoom + 0.1, 5);
+        } else {
+          currentZoom = Math.max(currentZoom - 0.1, 0.1);
+        }
+        updateImageTransform();
       });
     </script>
   </body>
